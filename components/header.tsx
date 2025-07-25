@@ -2,50 +2,33 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { User, Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAppSelector } from "@/hooks/useRedux";
 import { ICategory } from "@/types";
+import { useRouter } from "next/navigation";
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [categoriesLoading, setCategoriesLoading] = useState<boolean>(false);
+  const { categories } = useAppSelector((state) => state.category);
+  const { products } = useAppSelector((state) => state.product);
+  const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      // Handle search functionality here
-      console.log("Searching for:", searchQuery);
-      alert(`Searching for: ${searchQuery}`);
-    }
+    router.push(`/shop?q=${searchQuery}`);
   };
 
-  const fetchCategories = async () => {
-    try {
-      setCategoriesLoading(true);
-      const params = new URLSearchParams();
-
-      const response = await fetch(`/api/categories?${params}`);
-      const result = await response.json();
-
-      if (result.success) {
-        setCategories(result.data);
-      }
-    } catch (error) {
-      console.error("Fetch categories error:", error);
-    } finally {
-      setCategoriesLoading(false);
-    }
+  const getCategories = (categories: ICategory[]) => {
+    return categories?.filter((cat) =>
+      products?.some((prod) => prod?.category === cat?._id)
+    );
   };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
@@ -69,15 +52,24 @@ export function Header() {
               >
                 Home
               </Link>
-              {categories?.slice(0, 3)?.map((cat) => (
-                <Link
-                  key={cat?._id}
-                  href={`/category/${cat?.slug}`}
-                  className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  {cat?.name}
-                </Link>
-              ))}
+              {getCategories(categories)
+                ?.slice(0, 3)
+                ?.map((cat) => {
+                  const foundProducts = products?.find(
+                    (prod) => prod?.category === cat?._id
+                  );
+                  return (
+                    foundProducts && (
+                      <Link
+                        key={cat?._id}
+                        href={`/category/${cat?.slug}`}
+                        className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                      >
+                        {cat?.name}
+                      </Link>
+                    )
+                  );
+                })}
             </nav>
 
             {/* Desktop Search */}
