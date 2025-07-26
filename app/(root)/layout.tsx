@@ -2,6 +2,7 @@ import type React from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
+import SocialProofPopup from "@/components/SocialProofPopup";
 
 export default function MainLayout({
   children,
@@ -14,6 +15,7 @@ export default function MainLayout({
       <main className="min-h-screen">{children}</main>
       <Footer />
       <Toaster />
+      <SocialProofPopup />
     </>
   );
 }

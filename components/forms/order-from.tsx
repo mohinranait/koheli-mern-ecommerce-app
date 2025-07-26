@@ -12,11 +12,7 @@ import { toast } from "sonner";
 
 // Zod validation schema
 const orderSchema = z.object({
-  customerName: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be less than 50 characters")
-    .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+  customerName: z.string().optional(),
   phone: z
     .string()
     .min(11, "Phone number must be 11 digits")
@@ -25,10 +21,7 @@ const orderSchema = z.object({
       /^01[3-9]\d{8}$/,
       "Please enter a valid Bangladeshi phone number (e.g., 01712345678)"
     ),
-  address: z
-    .string()
-    .min(10, "Address must be at least 10 characters")
-    .max(200, "Address must be less than 200 characters"),
+  address: z.string().optional(),
 });
 
 type OrderFormData = z.infer<typeof orderSchema>;
@@ -61,6 +54,8 @@ const OrderForm = ({ product }: Props) => {
         productName: product?.name,
         price: product?.price,
         productId: product?._id,
+        address: data.address ? data?.address : "No address",
+        customerName: data.customerName ? data?.customerName : "Not provided",
       };
 
       const response = await fetch(`/api/orders`, {

@@ -67,3 +67,15 @@ export interface IUser {
   createdAt: string
   lastLogin?: string
 }
+
+
+export interface SocialProofNotification {
+  _id: string;
+  beforeText: string;
+  afterText: string;
+  title: string;
+  image: string;
+  status: "active" | "inactive";
+  createdAt: string;
+  updatedAt: string;
+}

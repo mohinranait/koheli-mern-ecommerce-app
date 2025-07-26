@@ -19,6 +19,8 @@ export function Header() {
   const { products } = useAppSelector((state) => state.product);
   const router = useRouter();
 
+  const user = localStorage.getItem("user");
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     router.push(`/shop?q=${searchQuery}`);
@@ -104,14 +106,17 @@ export function Header() {
             </Button>
 
             {/* Login Button */}
-            <Link href="/login">
+            <Link href={user ? "/dashboard" : "/login"}>
               <Button
                 variant="ghost"
                 size="sm"
                 className="text-gray-700 hover:text-blue-600"
               >
                 <User className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Login</span>
+
+                <span className="hidden sm:inline">
+                  {user ? "Dashboard" : "Login"}
+                </span>
               </Button>
             </Link>
 

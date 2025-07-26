@@ -17,6 +17,7 @@ import {
   Settings,
   Puzzle,
   Users,
+  Gift,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,6 +56,11 @@ const sidebarItems = [
     title: "Users",
     href: "/admin/users",
     icon: Users,
+  },
+  {
+    title: "Custom offers",
+    href: "/admin/offers",
+    icon: Gift,
   },
   {
     title: "App Config",
