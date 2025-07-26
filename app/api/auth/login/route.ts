@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
       // Create new user if doesn't exist
       user = await User.create({
-        name: "User", // Default name, can be updated later
+        name: "User", 
         phone,
         address: "Not provided", // Default address
         role: "user",

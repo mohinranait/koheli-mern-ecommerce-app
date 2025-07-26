@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
     const products = await productsQuery
 
-    console.log({products});
+    // console.log({products});
     
 
     return NextResponse.json({ 

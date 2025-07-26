@@ -57,8 +57,8 @@ export interface IOrder {
   adminMessage?: string
 }
 
-export interface User {
-  id: string
+export interface IUser {
+  _id: string
   name: string
   phone: string
   address: string
