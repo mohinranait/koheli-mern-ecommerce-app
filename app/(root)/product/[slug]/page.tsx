@@ -133,6 +133,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </CardHeader>
             <CardContent className="">
               <OrderFrom product={product} />
+
+              {product?.description && (
+                <div className="prose max-w-none mt-4">
+                  <h3 className="text-lg font-semibold ">
+                    Product Description
+                  </h3>
+                  <p className="text-gray-600">{product?.description}</p>
+                </div>
+              )}
             </CardContent>
           </Card>
           <InfoBar />
@@ -149,15 +158,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
             />
           </div>
 
-          <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+          <h1 className="text-3xl font-bold mb-4">{product?.name}</h1>
           <p className="text-3xl font-bold text-primary mb-6">
-            ৳{product.price.toFixed(2)}
+            ৳{product?.price.toFixed(2)}
           </p>
 
-          <div className="prose max-w-none">
-            <h3 className="text-lg font-semibold mb-2">Description</h3>
-            <p className="text-gray-600">{product.description}</p>
-          </div>
+          {product?.description && (
+            <div className="prose max-w-none">
+              <h3 className="text-lg font-semibold mb-2">Description</h3>
+              <p className="text-gray-600">{product.description}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
