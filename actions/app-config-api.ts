@@ -1,7 +1,9 @@
 import type { AppConfigFormData } from "@/validations/app-config.schema"
 
 export async function fetchAppConfig(): Promise<AppConfigFormData> {
-  const response = await fetch("/api/app-config")
+  const response = await fetch("/api/app-config",{
+    cache:'no-store'
+  })
   const result = await response.json()
 
   if (!result.success) {
