@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -9,13 +8,17 @@ import { MessageSquare } from "lucide-react";
 
 import moment from "moment";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth";
+import withAuth from "@/hoc/withAuth";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { logoutUser } from "@/redux/features/authSlice";
+import Image from "next/image";
+import { IOrder } from "@/types";
 
-export default function DashboardPage() {
-  const { user, isLoading } = useAuth();
-  const [userOrders, setUserOrders] = useState<any[]>([]);
+function DashboardPage() {
+  const { user } = useAppSelector((state) => state.auth);
+  const [userOrders, setUserOrders] = useState<IOrder[]>([]);
   const [orderLoading, setOrderLoading] = useState(false);
-  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const fetchOrders = async (phoneNumber: string) => {
     try {
@@ -39,11 +42,6 @@ export default function DashboardPage() {
     }
   }, [user]);
 
-  // Loading handled by useAuth hook
-  if (isLoading || !user) {
-    return null;
-  }
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
@@ -64,15 +62,14 @@ export default function DashboardPage() {
       {/* Welcome Section */}
       <div className="flex justify-between items-start">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Welcome, {user.name}!</h1>
-          <p className="text-gray-600 mt-2">Phone: {user.phone}</p>
+          <h1 className="text-3xl font-bold">Welcome, {user?.name}!</h1>
+          <p className="text-gray-600 mt-2">Phone: {user?.phone}</p>
         </div>
         <div>
           <Button
             variant={"destructive"}
             onClick={() => {
-              localStorage.removeItem("user");
-              router.push("/login");
+              dispatch(logoutUser());
             }}
           >
             Logout
@@ -100,37 +97,49 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-6">
                 {userOrders.map((order, index) => (
-                  <div
-                    key={order._id || index}
-                    className="border rounded-lg p-4"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold">{order.productName}</h3>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status}
-                      </Badge>
+                  <div className="flex flex-col md:flex-row w-full border gap-4  rounded-lg p-4">
+                    <div>
+                      <Image
+                        src={order?.productImg || "/placeholder.webp"}
+                        alt="image"
+                        width={200}
+                        height={200}
+                        className="rounded w-[100px]  "
+                      />
                     </div>
-                    <p className="text-sm text-gray-600 mb-1">
-                      Order ID: {order._id}
-                    </p>
-                    <p className="text-sm text-gray-600 mb-1">
-                      Date:{" "}
-                      {moment(order.createdAt).format("MMM dd, YYYY hh:mm A")}
-                    </p>
-                    <p className="text-lg font-bold text-primary mb-3">
-                      ৳{order.price?.toLocaleString() || 0}
-                    </p>
+                    <div key={order._id || index} className="flex-1">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-semibold">{order.productName}</h3>
+                        <Badge
+                          className={`capitalize ${getStatusColor(
+                            order.status
+                          )}`}
+                        >
+                          {order.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Order ID: {order._id}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Date:{" "}
+                        {moment(order.createdAt).format("MMM dd, YYYY hh:mm A")}
+                      </p>
+                      <p className="text-lg font-bold text-primary mb-3">
+                        ৳{order.price?.toLocaleString() || 0}
+                      </p>
 
-                    {/* Admin Message Display */}
-                    {order.adminMessage && (
-                      <Alert className="bg-blue-50 border-blue-200">
-                        <MessageSquare className="h-4 w-4 text-blue-600" />
-                        <AlertDescription className="text-blue-800">
-                          <strong>Message from Admin:</strong>{" "}
-                          {order.adminMessage}
-                        </AlertDescription>
-                      </Alert>
-                    )}
+                      {/* Admin Message Display */}
+                      {order.adminMessage && (
+                        <Alert className="bg-blue-50 border-blue-200">
+                          <MessageSquare className="h-4 w-4 text-blue-600" />
+                          <AlertDescription className="text-blue-800">
+                            <strong>Message from Admin:</strong>{" "}
+                            {order.adminMessage}
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -141,3 +150,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+export default withAuth(DashboardPage);

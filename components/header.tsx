@@ -13,13 +13,12 @@ import { ICategory } from "@/types";
 import { useRouter } from "next/navigation";
 
 export function Header() {
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { categories } = useAppSelector((state) => state.category);
   const { products } = useAppSelector((state) => state.product);
   const router = useRouter();
-
-  const user = localStorage.getItem("user");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,7 +105,7 @@ export function Header() {
             </Button>
 
             {/* Login Button */}
-            <Link href={user ? "/dashboard" : "/login"}>
+            <Link href={isAuthenticated ? "/dashboard" : "/login"}>
               <Button
                 variant="ghost"
                 size="sm"
@@ -115,7 +114,7 @@ export function Header() {
                 <User className="h-4 w-4 mr-2" />
 
                 <span className="hidden sm:inline">
-                  {user ? "Dashboard" : "Login"}
+                  {isAuthenticated ? "Dashboard" : "Login"}
                 </span>
               </Button>
             </Link>

@@ -20,7 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </div>
       <CardContent className="p-4">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+        <h3 className="font-semibold text-base md:text-lg mb-2 line-clamp-2">
           {product.name}
         </h3>
         <p className="text-2xl font-bold text-primary">

@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -12,24 +12,35 @@ export function Footer() {
               </div>
               <h3 className="text-lg font-semibold">ShopBD</h3>
             </div>
-            <p className="text-gray-400">Your trusted online shopping destination in Bangladesh.</p>
+            <p className="text-gray-400">
+              Your trusted online shopping destination in Bangladesh.
+            </p>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">Categories</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <Link href="/category/furniture" className="hover:text-white transition-colors">
+                <Link
+                  href="/category/furniture"
+                  className="hover:text-white transition-colors"
+                >
                   Furniture
                 </Link>
               </li>
               <li>
-                <Link href="/category/electronics" className="hover:text-white transition-colors">
+                <Link
+                  href="/category/electronics"
+                  className="hover:text-white transition-colors"
+                >
                   Electronics
                 </Link>
               </li>
               <li>
-                <Link href="/category/fashion" className="hover:text-white transition-colors">
+                <Link
+                  href="/category/fashion"
+                  className="hover:text-white transition-colors"
+                >
                   Fashion
                 </Link>
               </li>
@@ -60,7 +71,10 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-400">
-              <li>Phone: +880 1712-345678</li>
+              <li>
+                Helpline: <Link href={"tel:01739825295"}>01739825295</Link>
+              </li>
+              <li>WhatsApp: 017398-25295</li>
               <li>Email: info@shopbd.com</li>
               <li>Address: Dhaka, Bangladesh</li>
             </ul>
@@ -72,5 +86,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

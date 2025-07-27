@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import CategorySection from "@/components/pages/home/category-section";
 import CategorysSection from "@/components/pages/home/categorys-section";
 import Marquee from "react-fast-marquee";
+import AllProducts from "@/components/pages/home/all-products";
 
 export default async function HomePage() {
   return (
@@ -18,8 +19,10 @@ export default async function HomePage() {
       {/* Categories Section */}
       <CategorySection />
 
+      <AllProducts />
+
       {/* Featured Products by Category */}
-      <CategorysSection />
+      {/* <CategorysSection /> */}
     </div>
   );
 }

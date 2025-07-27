@@ -216,13 +216,13 @@ export default function ProductsPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProducts.map((product) => (
             <Card
               key={product._id}
-              className="hover:shadow-lg transition-shadow"
+              className="hover:shadow-lg transition-shadow p-2"
             >
-              <CardHeader>
+              <CardHeader className="p-0">
                 <div className="aspect-square relative mb-4">
                   <Image
                     src={product.image || "/placeholder.svg"}
@@ -232,7 +232,9 @@ export default function ProductsPage() {
                   />
                 </div>
                 <CardTitle className="flex justify-between items-start">
-                  <span className="line-clamp-2">{product.name}</span>
+                  <span className="line-clamp-2 text-sm md:text-base 2xl:text-lg">
+                    {product.name}
+                  </span>
                   <div className="flex space-x-1 ml-2">
                     <Button
                       variant="ghost"
@@ -251,7 +253,7 @@ export default function ProductsPage() {
                   </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-0">
                 <div className="space-y-2">
                   <p className="text-2xl font-bold text-primary">
                     ৳{product.price.toLocaleString()}

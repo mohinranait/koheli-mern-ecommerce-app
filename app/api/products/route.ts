@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Execute query
-    let productsQuery = Product.find(query).sort({ priority: 1, createdAt: -1 })
+    let productsQuery = Product.find(query).sort({ updatedAt: -1, createdAt: -1 })
 
     if (limit && !isNaN(Number(limit))) {
       productsQuery = productsQuery.limit(Number(limit))

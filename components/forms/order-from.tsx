@@ -9,6 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { setAuthUser } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 // Zod validation schema
 const orderSchema = z.object({
@@ -31,6 +34,8 @@ type Props = {
 };
 
 const OrderForm = ({ product }: Props) => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -69,6 +74,8 @@ const OrderForm = ({ product }: Props) => {
       const result = await response.json();
 
       if (result.success) {
+        dispatch(setAuthUser(result.data));
+        router.push("/dashboard");
         toast.success("Order place successfully");
       }
 
@@ -122,10 +129,14 @@ const OrderForm = ({ product }: Props) => {
       </div>
 
       <div className="border-t pt-4">
+        <div className="flex justify-between items-center mb-1">
+          <span className="font-semibold">Quantity:</span>
+          <span className="font-bold text-primary">1 item</span>
+        </div>
         <div className="flex justify-between items-center mb-4">
           <span className="text-lg font-semibold">Total:</span>
           <span className="text-2xl font-bold text-primary">
-            ৳{product.price.toLocaleString()}
+            ৳{product.price.toFixed(2)}
           </span>
         </div>
 

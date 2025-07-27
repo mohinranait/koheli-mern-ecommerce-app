@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import dbConnect from "@/lib/mongodb"
 import Order from "@/models/Order"
 import '@/models/Product';
+import User from "@/models/User";
 
 export async function GET(request: NextRequest) {
   try {
@@ -46,6 +47,24 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { productId, productName, customerName, phone, address, price,productImg } = body
 
+    if (!phone) {
+      return NextResponse.json({ success: false, error: "Phone number is required" }, { status: 400 })
+    }
+
+    // Find or create user
+      let user = await User.findOne({ phone })
+
+      if (!user) {
+          // Create new user if doesn't exist
+          user = await User.create({
+            name: "User", 
+            phone,
+            address: "Not provided", 
+            role: "user",
+            status: "active",
+          })
+      }
+
     const order = await Order.create({
       productId,
       productName,
@@ -56,7 +75,7 @@ export async function POST(request: NextRequest) {
       price: Number.parseFloat(price),
     })
 
-    return NextResponse.json({ success: true, data: order }, { status: 201 })
+    return NextResponse.json({ success: true, data: user }, { status: 201 })
   } catch (error) {
     console.error("Orders POST error:", error)
     return NextResponse.json({ success: false, error: "Failed to create order" }, { status: 500 })

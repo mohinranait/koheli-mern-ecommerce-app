@@ -10,6 +10,8 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { setAuthUser } from "@/redux/features/authSlice";
 
 const loginSchema = z.object({
   phone: z
@@ -26,6 +28,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const {
     handleSubmit,
@@ -53,8 +56,7 @@ export default function LoginPage() {
       const resData = await res.json();
 
       if (resData.success) {
-        // Store user data
-        localStorage.setItem("user", JSON.stringify(resData?.data));
+        dispatch(setAuthUser(resData?.data));
 
         // Reset form
         reset();

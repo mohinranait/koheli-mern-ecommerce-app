@@ -3,6 +3,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
 import SocialProofPopup from "@/components/SocialProofPopup";
+import WhatsApp from "@/components/whatsapp";
+import Messenger from "@/components/messenger";
 
 export default function MainLayout({
   children,
@@ -16,6 +18,8 @@ export default function MainLayout({
       <Footer />
       <Toaster />
       <SocialProofPopup />
+      <WhatsApp />
+      <Messenger />
     </>
   );
 }
