@@ -11,6 +11,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAppSelector } from "@/hooks/useRedux";
 import { ICategory } from "@/types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Logo from "./logo";
 
 export function Header() {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -36,12 +38,7 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">S</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">ShopBD</span>
-          </Link>
+          <Logo />
 
           {/* Desktop Navigation & Search */}
           <div className="hidden md:flex items-center space-x-8 flex-1 max-w-2xl mx-8">

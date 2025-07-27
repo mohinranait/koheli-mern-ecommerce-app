@@ -10,6 +10,8 @@ import { BASE_URL } from "@/lib/accessEnv";
 import { IProduct } from "@/types";
 import { Minus, Plus } from "lucide-react";
 import CategoryName from "@/components/pages/product/category-name";
+import Link from "next/link";
+import InfoBar from "@/components/Info-bar";
 
 interface ProductPageProps {
   params: {
@@ -69,7 +71,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Order Form */}
 
-        <div>
+        <div className="space-y-3">
           <Card className="shadow-lg">
             <CardHeader className="pb-4">
               {/* Delivery Notice */}
@@ -133,6 +135,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <OrderFrom product={product} />
             </CardContent>
           </Card>
+          <InfoBar />
         </div>
 
         {/* Product Details */}

@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { logoutUser } from "@/redux/features/authSlice";
 import Image from "next/image";
 import { IOrder } from "@/types";
+import InfoBar from "@/components/Info-bar";
 
 function DashboardPage() {
   const { user } = useAppSelector((state) => state.auth);
@@ -77,7 +78,7 @@ function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid space-y-5 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>My Orders</CardTitle>
@@ -146,6 +147,8 @@ function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        <InfoBar />
       </div>
     </div>
   );

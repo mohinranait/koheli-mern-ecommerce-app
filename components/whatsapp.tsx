@@ -5,7 +5,7 @@ import React from "react";
 const WhatsApp = () => {
   return (
     <Link
-      href={"https://wa.me/+8801710060020"}
+      href={"https://wa.me/+8801739825295"}
       target="_blank"
       className="h-12 w-12 rounded-full overflow-hidden  right-2 bottom-20 fixed"
     >

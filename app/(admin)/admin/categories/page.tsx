@@ -3,6 +3,9 @@
 import type React from "react";
 
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,12 +15,45 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, Edit, Trash2, Search, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
+  Loader2,
+  ImageIcon,
+  Upload,
+  X,
+} from "lucide-react";
 import { ICategory } from "@/types";
+import { toast } from "sonner";
+import Image from "next/image";
+
+// Zod validation schema
+const categorySchema = z.object({
+  name: z
+    .string()
+    .min(1, "Category name is required")
+    .max(100, "Category name must be less than 100 characters"),
+  slug: z.string().optional(),
+  image: z
+    .string()
+    .url("Please enter a valid URL")
+    .min(1, "Image URL is required"),
+});
+
+type CategoryFormValues = z.infer<typeof categorySchema>;
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -29,10 +65,18 @@ export default function CategoriesPage() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
-    image: "",
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  // React Hook Form setup
+  const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: "",
+      slug: "",
+      image: "",
+    },
   });
 
   const fetchCategories = async () => {
@@ -61,12 +105,48 @@ export default function CategoriesPage() {
     fetchCategories();
   }, [searchQuery]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Upload image to server
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/media", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || "Image upload failed");
+    }
+
+    return result.data;
+  };
+
+  const handleSubmit = async (values: CategoryFormValues) => {
     setSubmitting(true);
     setError("");
 
     try {
+      let imageUrl = values.image;
+
+      // If there's a new file selected, upload it first
+      if (selectedFile) {
+        setUploadingImage(true);
+        try {
+          imageUrl = await uploadImage(selectedFile);
+        } catch (uploadError) {
+          toast.warning("Image upload failed. Please try again.");
+          console.error("Image upload error:", uploadError);
+          return;
+        } finally {
+          setUploadingImage(false);
+        }
+      }
+
+      const productData = { ...values, image: imageUrl };
+
       const url = editingCategory
         ? `/api/categories/${editingCategory._id}`
         : "/api/categories";
@@ -77,7 +157,7 @@ export default function CategoriesPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(productData),
       });
 
       const result = await response.json();
@@ -86,7 +166,9 @@ export default function CategoriesPage() {
         await fetchCategories();
         setIsDialogOpen(false);
         setEditingCategory(null);
-        setFormData({ name: "", slug: "", image: "" });
+        setImagePreview("");
+        form.reset();
+        setSelectedFile(null);
         alert(
           editingCategory
             ? "Category updated successfully!"
@@ -105,12 +187,15 @@ export default function CategoriesPage() {
 
   const handleEdit = (category: ICategory) => {
     setEditingCategory(category);
-    setFormData({
+    form.reset({
       name: category.name,
       slug: category.slug,
       image: category.image,
     });
     setIsDialogOpen(true);
+    if (category.image) {
+      setImagePreview(category.image);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -125,12 +210,12 @@ export default function CategoriesPage() {
 
       if (result.success) {
         await fetchCategories();
-        alert("Category deleted successfully!");
+        toast("Category deleted successfully!");
       } else {
-        alert(result.error || "Failed to delete category");
+        toast(result.error || "Failed to delete category");
       }
     } catch (error) {
-      alert("Failed to delete category");
+      toast("Failed to delete category");
       console.error("Delete error:", error);
     }
   };
@@ -142,12 +227,65 @@ export default function CategoriesPage() {
       .replace(/(^-|-$)/g, "");
   };
 
+  // Handle file selection
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        toast.warning(
+          "Please select a valid image file (JPEG, PNG, GIF, WebP)"
+        );
+        return;
+      }
+
+      // Validate file size (10MB max)
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast.warning("File size must be less than 10MB");
+        return;
+      }
+
+      setSelectedFile(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleNameChange = (name: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      name,
-      slug: generateSlug(name),
-    }));
+    const slug = generateSlug(name);
+    form.setValue("slug", slug);
+    return name;
+  };
+
+  const handleDialogOpen = () => {
+    setEditingCategory(null);
+    form.reset({
+      name: "",
+      slug: "",
+      image: "",
+    });
+    setError("");
+    setImagePreview("");
+  };
+
+  // Remove selected image
+  const removeImage = () => {
+    setSelectedFile(null);
+    setImagePreview("");
+    form.setValue("image", "");
   };
 
   return (
@@ -157,18 +295,12 @@ export default function CategoriesPage() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button
-              onClick={() => {
-                setEditingCategory(null);
-                setFormData({ name: "", slug: "", image: "" });
-                setError("");
-              }}
-            >
+            <Button onClick={handleDialogOpen}>
               <Plus className="h-4 w-4 mr-2" />
               Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[calc(100vh-100px)] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingCategory ? "Edit Category" : "Add New Category"}
@@ -181,54 +313,148 @@ export default function CategoriesPage() {
               </Alert>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Category Name</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  required
-                  disabled={submitting}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(handleNameChange(e.target.value))
+                          }
+                          disabled={submitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <Label htmlFor="slug">Slug</Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, slug: e.target.value }))
-                  }
-                  required
-                  disabled={submitting}
+
+                <FormField
+                  control={form.control}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Slug</FormLabel>
+                      <FormControl>
+                        <Input {...field} readOnly disabled={submitting} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <Label htmlFor="image">Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, image: e.target.value }))
-                  }
-                  required
-                  disabled={submitting}
+
+                {/* Image Upload Section */}
+                <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Image</FormLabel>
+                      <FormControl>
+                        <div className="space-y-4">
+                          {/* Image Preview */}
+                          {imagePreview && (
+                            <div className="relative w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
+                              <Image
+                                src={imagePreview || "/placeholder.svg"}
+                                alt="Product preview"
+                                fill
+                                className="object-cover"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2"
+                                onClick={removeImage}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+
+                          {/* File Input */}
+                          {!imagePreview && (
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                              <div className="text-center">
+                                <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+                                <div className="mt-4">
+                                  <label
+                                    htmlFor="image-upload"
+                                    className="cursor-pointer"
+                                  >
+                                    <span className="mt-2 block text-sm font-medium text-gray-900">
+                                      Click to upload image
+                                    </span>
+                                    <span className="mt-1 block text-xs text-gray-500">
+                                      PNG, JPG, GIF up to 10MB
+                                    </span>
+                                  </label>
+                                  <input
+                                    id="image-upload"
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleFileSelect}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Change Image Button */}
+                          {imagePreview && (
+                            <div className="flex justify-center">
+                              <label
+                                htmlFor="image-upload-change"
+                                className="cursor-pointer"
+                              >
+                                <Button type="button" variant="outline" asChild>
+                                  <span>
+                                    <Upload className="h-4 w-4 mr-2" />
+                                    Change Image
+                                  </span>
+                                </Button>
+                                <input
+                                  id="image-upload-change"
+                                  type="file"
+                                  className="hidden"
+                                  accept="image/*"
+                                  onChange={handleFileSelect}
+                                />
+                              </label>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <Button type="submit" className="w-full" disabled={submitting}>
-                {submitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {editingCategory ? "Updating..." : "Adding..."}
-                  </>
-                ) : editingCategory ? (
-                  "Update Category"
-                ) : (
-                  "Add Category"
-                )}
-              </Button>
-            </form>
+
+                <Button type="submit" className="w-full" disabled={submitting}>
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      {editingCategory ? "Updating..." : "Adding..."}
+                    </>
+                  ) : editingCategory ? (
+                    "Update Category"
+                  ) : (
+                    "Add Category"
+                  )}
+                </Button>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>

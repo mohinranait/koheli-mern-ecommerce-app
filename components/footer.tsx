@@ -1,16 +1,22 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Logo from "./logo";
 
 export function Footer() {
+  const pathName = usePathname();
+  if (pathName == "/") {
+    return null;
+  }
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">S</span>
-              </div>
-              <h3 className="text-lg font-semibold">ShopBD</h3>
+              <Link href={"/"} className="text-xl font-bold text-gray-100">
+                koheli.com
+              </Link>
             </div>
             <p className="text-gray-400">
               Your trusted online shopping destination in Bangladesh.
@@ -74,15 +80,20 @@ export function Footer() {
               <li>
                 Helpline: <Link href={"tel:01739825295"}>01739825295</Link>
               </li>
-              <li>WhatsApp: 017398-25295</li>
-              <li>Email: info@shopbd.com</li>
-              <li>Address: Dhaka, Bangladesh</li>
+              <li>
+                WhatsApp:{" "}
+                <Link href={"https://wa.me/+8801739825295"}>01739825295</Link>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 ShopBD. All rights reserved.</p>
+          <p>
+            &copy; 2024{" "}
+            <span className="text-xl font-bold text-gray-100">koheli.com</span>.
+            All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
