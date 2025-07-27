@@ -19,13 +19,14 @@ import { Edit, Trash2, Search, Filter, Loader2 } from "lucide-react";
 import Image from "next/image";
 import type { ICategory, IProduct } from "@/types";
 import CreateProductForm from "@/components/forms/create-product-form";
+import { usePathname } from "next/navigation";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
-
+  const pathName = usePathname();
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   // Filter states
@@ -273,7 +274,7 @@ export default function ProductsPage() {
                   </div>
                   {product.link && (
                     <a
-                      href={product.link}
+                      href={`/product/${product?.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-blue-600 hover:underline"

@@ -20,6 +20,15 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </div>
       <CardContent className="p-4">
+        {product?.link && (
+          <Link
+            href={`${product?.link}`}
+            target="_blank"
+            className="text-blue-600 text-base mb-2 "
+          >
+            View Details
+          </Link>
+        )}
         <h3 className="font-semibold text-base md:text-lg mb-2 line-clamp-2">
           {product.name}
         </h3>

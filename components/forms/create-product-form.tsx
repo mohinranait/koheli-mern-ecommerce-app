@@ -47,10 +47,7 @@ const productSchema = z.object({
   price: z.number().min(0, "Price must be a positive number"),
   image: z.string().optional(),
   category: z.string().min(1, "Please select a category"),
-  description: z
-    .string()
-    .min(1, "Description is required")
-    .min(10, "Description must be at least 10 characters"),
+  description: z.string().optional(),
   status: z.enum(["active", "inactive"]),
   priority: z.number().min(0, "Priority must be a positive number"),
   link: z.string().url("Please enter a valid URL").optional().or(z.literal("")),

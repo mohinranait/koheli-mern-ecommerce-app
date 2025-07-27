@@ -47,10 +47,7 @@ const categorySchema = z.object({
     .min(1, "Category name is required")
     .max(100, "Category name must be less than 100 characters"),
   slug: z.string().optional(),
-  image: z
-    .string()
-    .url("Please enter a valid URL")
-    .min(1, "Image URL is required"),
+  image: z.string().optional(),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -169,7 +166,7 @@ export default function CategoriesPage() {
         setImagePreview("");
         form.reset();
         setSelectedFile(null);
-        alert(
+        toast.success(
           editingCategory
             ? "Category updated successfully!"
             : "Category added successfully!"
@@ -358,7 +355,7 @@ export default function CategoriesPage() {
                   name="image"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Product Image</FormLabel>
+                      <FormLabel>Category Image</FormLabel>
                       <FormControl>
                         <div className="space-y-4">
                           {/* Image Preview */}
@@ -366,7 +363,7 @@ export default function CategoriesPage() {
                             <div className="relative w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
                               <Image
                                 src={imagePreview || "/placeholder.svg"}
-                                alt="Product preview"
+                                alt="Category preview"
                                 fill
                                 className="object-cover"
                               />

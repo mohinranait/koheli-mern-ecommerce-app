@@ -7,7 +7,6 @@ import React from "react";
 const ShopPage = () => {
   const { products } = useAppSelector((state) => state.product);
   const searchParams = useSearchParams();
-  console.log({});
   const search = searchParams.get("q") || "";
 
   const filtersProducts = products?.filter((product) => {

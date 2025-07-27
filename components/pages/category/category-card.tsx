@@ -12,8 +12,8 @@ const CategoryCard = ({ category }: Props) => {
       <Link href={`/category/${category.slug}`}>
         <div className="relative h-32 md:h-40 rounded-lg overflow-hidden mb-4">
           <Image
-            src={category.image || "/placeholder.svg"}
-            alt={category.name}
+            src={category?.image || "/placeholder.svg"}
+            alt={category?.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />

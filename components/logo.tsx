@@ -14,7 +14,7 @@ const Logo = () => {
           className="w-full"
         />
       </div>
-      <span className="text-xl font-bold text-gray-100">koheli.com</span>
+      <span className="text-xl font-bold text-gray-900">koheli.com</span>
     </Link>
   );
 };

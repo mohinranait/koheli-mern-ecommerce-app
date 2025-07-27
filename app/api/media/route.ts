@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "App configuration not found" }, { status: 500 })
     }
 
-    console.log({config});
+
     
 
     // Cloudinary enabled আছে কিনা check করুন
@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
     if (!cloudName || !apiKey || !apiSecret) {
       return NextResponse.json({ success: false, error: "Cloudinary credentials are incomplete" }, { status: 500 })
     }
-    console.log({cloudName, apiKey, apiSecret});
     
     // Cloudinary dynamically configure করুন
     cloudinary.config({
@@ -72,7 +71,6 @@ export async function POST(request: NextRequest) {
        
       })
 
-      console.log({result});
       
 
       const { url, secure_url, public_id, format, width, height, bytes: uploadedBytes } = result

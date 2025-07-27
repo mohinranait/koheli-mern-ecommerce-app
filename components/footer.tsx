@@ -2,9 +2,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./logo";
+import { useAppSelector } from "@/hooks/useRedux";
+import { ICategory } from "@/types";
 
 export function Footer() {
+  const { categories } = useAppSelector((state) => state.category);
+  const { products } = useAppSelector((state) => state.product);
   const pathName = usePathname();
+  const getCategories = (categories: ICategory[]) => {
+    return categories?.filter((cat) =>
+      products?.some((prod) => prod?.category === cat?._id)
+    );
+  };
+
   if (pathName == "/") {
     return null;
   }
@@ -26,30 +36,25 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Categories</h4>
             <ul className="space-y-2 text-gray-400">
-              <li>
-                <Link
-                  href="/category/furniture"
-                  className="hover:text-white transition-colors"
-                >
-                  Furniture
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category/electronics"
-                  className="hover:text-white transition-colors"
-                >
-                  Electronics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category/fashion"
-                  className="hover:text-white transition-colors"
-                >
-                  Fashion
-                </Link>
-              </li>
+              {getCategories(categories)
+                ?.slice(0, 3)
+                ?.map((cat) => {
+                  const foundProducts = products?.find(
+                    (prod) => prod?.category === cat?._id
+                  );
+                  return (
+                    foundProducts && (
+                      <li key={cat?._id}>
+                        <Link
+                          href={`/category/${cat?.slug}`}
+                          className="hover:text-white transition-colors"
+                        >
+                          {cat?.name}
+                        </Link>
+                      </li>
+                    )
+                  );
+                })}
             </ul>
           </div>
 

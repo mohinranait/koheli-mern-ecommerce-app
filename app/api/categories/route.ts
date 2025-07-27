@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       query.status = status
     }
 
-    const categories = await Category.find(query).sort({ createdAt: -1 })
+    const categories = await Category.find(query).sort({ updatedAt: -1, createdAt: -1 })
 
     return NextResponse.json({ success: true, data: categories })
   } catch (error) {

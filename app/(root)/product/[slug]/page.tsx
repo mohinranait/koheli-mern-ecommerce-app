@@ -34,13 +34,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-2 md:pt-6">
-      <div className="flex gap-5  md:hidden p-4">
-        <div className="aspect-square bg-gray-100 rounded flex items-center justify-center relative mb-6">
+    <div className="container mx-auto px-4 py-2 pt-2 md:pt-6">
+      <div className="flex gap-5  md:hidden ">
+        <div className="aspect-square mb-2 bg-gray-100 rounded flex items-center justify-center relative ">
           <Image
             src={product.image || "/placeholder.svg"}
             alt={product.name}
-            className="object-cover w-[140px] rounded-lg"
+            className="object-cover w-[100px] rounded-lg"
             width={140}
             height={140}
           />
@@ -71,12 +71,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Order Form */}
 
-        <div className="space-y-3">
-          <Card className="shadow-lg">
-            <CardHeader className="pb-4">
+        <div className="">
+          <Card className="shadow-lg gap-0 mb-4 !p-0">
+            <CardHeader className="p-2 md:p-4 gap-0">
               {/* Delivery Notice */}
-              <div className="bg-gradient-to-r from-green-700 to-green-800 text-white p-6 rounded-lg mb-4 shadow-md">
-                <div className="flex items-center gap-3 mb-3">
+              <div className="bg-gradient-to-r from-green-700 to-green-800 text-white p-2 md:p-6 rounded-lg mb-4 shadow-md">
+                <div className="md:flex hidden items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                     <svg
                       className="w-5 h-5"
@@ -89,14 +89,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   <h3 className="text-lg font-semibold">ডেলিভারি তথ্য</h3>
                 </div>
                 <p className="text-green-50 leading-relaxed">
-                  ডেলিভারিন চার্জ ৫০ টাকা তবে অবস্থান ও প্রোডাক্ট এর ওজন
-                  অনুযায়ী ডেলিভারি চার্জ পরিবর্তিত হতে পারে
+                  ডেলিভারি চার্জ ৫০ টাকা তবে অবস্থান ও প্রোডাক্ট এর ওজন অনুযায়ী
+                  ডেলিভারি চার্জ পরিবর্তিত হতে পারে
                 </p>
               </div>
 
               {/* Order Instructions */}
-              <div className="bg-gradient-to-r from-emerald-600 to-green-700 text-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center gap-3 mb-3">
+              <div className="bg-gradient-to-r from-emerald-600 to-green-700 text-white p-2 md:p-6 rounded-lg shadow-md">
+                <div className="hidden md:flex items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                     <svg
                       className="w-5 h-5"
@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </div>
             </CardHeader>
 
-            <CardHeader className="pt-2">
+            <CardHeader className="gap-0 p-2 md:p-4">
               <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                 <svg
                   className="w-6 h-6 text-green-600"
@@ -131,7 +131,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 Place Your Order
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="">
               <OrderFrom product={product} />
             </CardContent>
           </Card>
