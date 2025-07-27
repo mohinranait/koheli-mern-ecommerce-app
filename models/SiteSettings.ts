@@ -4,37 +4,35 @@ const SiteSettingsSchema = new mongoose.Schema(
   {
     logo: {
       type: String,
-      default: "/placeholder.svg?height=40&width=40",
+      default:'/placeholder.webp?height=40&width=40'
     },
     siteName: {
       type: String,
-      default: "ShopBD",
     },
     metaTitle: {
       type: String,
-      default: "ShopBD - Your Online Shopping Destination",
     },
     metaDescription: {
       type: String,
-      default: "Shop furniture, electronics, and fashion at the best prices in Bangladesh",
     },
-    address: {
+    marque: {
       type: String,
-      default: "Dhaka, Bangladesh",
+    },
+    marqueStatus: {
+      type: Boolean,
+      default:true
     },
     phone: {
       type: String,
-      default: "+880 1712-345678",
     },
     email: {
       type: String,
-      default: "info@shopbd.com",
     },
     socialMedia: {
-      facebook: { type: String, default: "https://facebook.com/shopbd" },
-      twitter: { type: String, default: "https://twitter.com/shopbd" },
-      instagram: { type: String, default: "https://instagram.com/shopbd" },
-      youtube: { type: String, default: "https://youtube.com/shopbd" },
+      facebook: { type: String, },
+      twitter: { type: String,  },
+      instagram: { type: String,  },
+      youtube: { type: String,  },
     },
   },
   {

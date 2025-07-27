@@ -24,9 +24,11 @@ const CategorySection = () => {
           Shop by Category
         </h2>
         <div className="grid grid-cols-3  sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 sm:gap-2 xl:gap-5">
-          {getCategories(categories)?.map((category) => {
-            return <CategoryCard key={category?._id} category={category} />;
-          })}
+          {getCategories(categories)
+            ?.slice(0, 6)
+            ?.map((category) => {
+              return <CategoryCard key={category?._id} category={category} />;
+            })}
         </div>
         <div className="flex justify-center">
           <Link href={"/category"}>

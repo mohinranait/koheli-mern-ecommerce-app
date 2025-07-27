@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "./logo";
 import { useAppSelector } from "@/hooks/useRedux";
 import { ICategory } from "@/types";
 
 export function Footer() {
+  const { site } = useAppSelector((state) => state.site);
   const { categories } = useAppSelector((state) => state.category);
   const { products } = useAppSelector((state) => state.product);
   const pathName = usePathname();
@@ -29,7 +29,8 @@ export function Footer() {
               </Link>
             </div>
             <p className="text-gray-400">
-              Your trusted online shopping destination in Bangladesh.
+              Koheli.com is the best local online shop in Bangladesh anywhere.
+              Get your product locally or also get with courier service.
             </p>
           </div>
 
@@ -59,21 +60,27 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Customer Service</h4>
+            <h4 className="font-semibold mb-4">Quick menu</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  Contact Us
+                <Link href="/" className="hover:text-white transition-colors">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  FAQ
+                <Link
+                  href="/category"
+                  className="hover:text-white transition-colors"
+                >
+                  Categories
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  Shipping Info
+                <Link
+                  href="/dashboard"
+                  className="hover:text-white transition-colors"
+                >
+                  My Account
                 </Link>
               </li>
             </ul>
@@ -82,13 +89,23 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-400">
-              <li>
-                Helpline: <Link href={"tel:01739825295"}>01739825295</Link>
-              </li>
+              {site?.phone && (
+                <li>
+                  Helpline:{" "}
+                  <Link href={`tel:${site?.phone}`}>{site?.phone}</Link>
+                </li>
+              )}
               <li>
                 WhatsApp:{" "}
                 <Link href={"https://wa.me/+8801739825295"}>01739825295</Link>
               </li>
+              {site?.email && (
+                <li>
+                  Email:{" "}
+                  <Link href={`mailto:${site?.email}`}>{site?.email}</Link>
+                </li>
+              )}
+              {site?.address && <li>{site?.address}</li>}
             </ul>
           </div>
         </div>

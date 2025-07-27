@@ -4,6 +4,8 @@ export interface SiteSettings {
   metaTitle: string
   metaDescription: string
   address: string
+  marque: string
+  marqueStatus: boolean
   phone: string
   email: string
   socialMedia: {
@@ -15,17 +17,19 @@ export interface SiteSettings {
 }
 
 export const defaultSiteSettings: SiteSettings = {
-  logo: "/placeholder.svg?height=40&width=40",
-  siteName: "ShopBD",
-  metaTitle: "ShopBD - Your Online Shopping Destination",
-  metaDescription: "Shop furniture, electronics, and fashion at the best prices in Bangladesh",
-  address: "Dhaka, Bangladesh",
-  phone: "+880 1712-345678",
-  email: "info@shopbd.com",
+  logo: "/placeholder.webp?height=40&width=40",
+  siteName: "Koholi",
+  metaTitle: "Koholi",
+  metaDescription: "",
+  address: "",
+  marque: "",
+  marqueStatus: true,
+  phone: "",
+  email: "",
   socialMedia: {
-    facebook: "https://facebook.com/shopbd",
-    twitter: "https://twitter.com/shopbd",
-    instagram: "https://instagram.com/shopbd",
-    youtube: "https://youtube.com/shopbd",
+    facebook: "",
+    twitter: "",
+    instagram: "",
+    youtube: "",
   },
 }

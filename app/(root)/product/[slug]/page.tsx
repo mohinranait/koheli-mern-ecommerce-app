@@ -10,7 +10,6 @@ import { BASE_URL } from "@/lib/accessEnv";
 import { IProduct } from "@/types";
 import { Minus, Plus } from "lucide-react";
 import CategoryName from "@/components/pages/product/category-name";
-import Link from "next/link";
 import InfoBar from "@/components/Info-bar";
 
 interface ProductPageProps {
