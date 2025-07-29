@@ -37,6 +37,7 @@ import moment from "moment";
 import { IOrder, TOrderStatus } from "@/types";
 import { toast } from "sonner";
 import Link from "next/link";
+import GlobalPagination from "@/components/paginations";
 
 export default function OrdersPage() {
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
@@ -44,6 +45,10 @@ export default function OrdersPage() {
   const [adminMessage, setAdminMessage] = useState("");
   const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -194,6 +199,16 @@ export default function OrdersPage() {
     };
   }, [filteredOrders]);
 
+  const paginatedOrders = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredOrders.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredOrders, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number, limit: number) => {
+    setCurrentPage(page);
+    setItemsPerPage(limit);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
@@ -331,7 +346,7 @@ export default function OrdersPage() {
         <>
           {/* Orders List */}
           <div className="grid gap-6">
-            {filteredOrders.map((order) => (
+            {paginatedOrders.map((order) => (
               <Card key={order._id}>
                 <CardHeader>
                   <div className="flex justify-between items-start">
@@ -450,6 +465,17 @@ export default function OrdersPage() {
               </Card>
             ))}
           </div>
+
+          {filteredOrders?.length > 0 && (
+            <div>
+              <GlobalPagination
+                totalItems={filteredOrders?.length}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
 
           {/* No Orders Found */}
           {filteredOrders.length === 0 && (

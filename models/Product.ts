@@ -28,7 +28,8 @@ const ProductSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, "Product description is required"],
+      required:false,
+      default:''
     },
     status: {
       type: String,

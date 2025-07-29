@@ -10,7 +10,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
       <div className="aspect-square relative">
         <Image
           src={product.image || "/placeholder.svg"}
@@ -19,7 +19,7 @@ export function ProductCard({ product }: ProductCardProps) {
           className="object-cover"
         />
       </div>
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex-1">
         {product?.link && (
           <Link
             href={`${product?.link}`}
@@ -33,10 +33,10 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h3>
         <p className="text-2xl font-bold text-primary">
-          ৳{product.price.toLocaleString()}
+          ৳{product.price.toFixed(2)}
         </p>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-4 pt-0 mt-auto">
         <Link href={`/product/${product.slug}`} className="w-full">
           <Button className="w-full">Buy Now</Button>
         </Link>

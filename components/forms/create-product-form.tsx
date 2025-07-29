@@ -37,14 +37,14 @@ import z from "zod";
 import Image from "next/image";
 import { toast } from "sonner";
 
-// Zod schema for form validation
+// Zod schema for form validation - price এখন required এবং empty string allow করে না
 const productSchema = z.object({
   name: z
     .string()
     .min(1, "Product name is required")
     .min(3, "Product name must be at least 3 characters"),
   slug: z.string().optional(),
-  price: z.number().min(0, "Price must be a positive number"),
+  price: z.number().min(0.01, "Price is required and must be greater than 0"), // 0.01 minimum দিয়ে empty value prevent করা
   image: z.string().optional(),
   category: z.string().min(1, "Please select a category"),
   description: z.string().optional(),
@@ -76,13 +76,13 @@ const CreateProductForm = ({
   const [imagePreview, setImagePreview] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  // React Hook Form setup
+  // React Hook Form setup - default values থেকে price remove করা
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
       slug: "",
-      price: 0,
+      // price: 0, // এই line remove করা হয়েছে
       image: "",
       category: "",
       description: "",
@@ -231,7 +231,7 @@ const CreateProductForm = ({
     reset({
       name: "",
       slug: "",
-      price: 0,
+      // price: 0, // এই line remove করা হয়েছে
       image: "",
       category: "",
       description: "",
@@ -281,7 +281,7 @@ const CreateProductForm = ({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -304,9 +304,16 @@ const CreateProductForm = ({
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="0"
+                        placeholder="Enter price" // placeholder text change করা
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        value={field.value || ""} // এখানে empty string show করার জন্য
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Empty string হলে undefined set করা, নাহলে number convert করা
+                          field.onChange(
+                            value === "" ? undefined : Number(value)
+                          );
+                        }}
                       />
                     </FormControl>
                     <FormMessage />

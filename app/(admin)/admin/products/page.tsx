@@ -20,6 +20,8 @@ import Image from "next/image";
 import type { ICategory, IProduct } from "@/types";
 import CreateProductForm from "@/components/forms/create-product-form";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
+import GlobalPagination from "@/components/paginations";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -28,6 +30,10 @@ export default function ProductsPage() {
   const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
   const pathName = usePathname();
   const [categories, setCategories] = useState<ICategory[]>([]);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -116,8 +122,8 @@ export default function ProductsPage() {
 
       const result = await response.json();
       if (result.success) {
-        fetchProducts(); // Refresh the product list
-        alert("Product deleted successfully!");
+        fetchProducts();
+        toast("Product deleted successfully!");
       } else {
         alert(result.error || "Failed to delete product");
       }
@@ -131,6 +137,16 @@ export default function ProductsPage() {
     setSearchTerm("");
     setSelectedCategory("all");
     setSelectedStatus("all");
+  };
+
+  const paginatedReviews = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredProducts, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number, limit: number) => {
+    setCurrentPage(page);
+    setItemsPerPage(limit);
   };
 
   return (
@@ -218,7 +234,7 @@ export default function ProductsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProducts.map((product) => (
+          {paginatedReviews.map((product) => (
             <Card
               key={product._id}
               className="hover:shadow-lg transition-shadow p-2"
@@ -257,7 +273,7 @@ export default function ProductsPage() {
               <CardContent className="p-0">
                 <div className="space-y-2">
                   <p className="text-2xl font-bold text-primary">
-                    ৳{product.price.toLocaleString()}
+                    ৳{product.price.toFixed(2)}
                   </p>
                   <div className="flex justify-between items-center">
                     <Badge variant="secondary">
@@ -288,6 +304,14 @@ export default function ProductsPage() {
           ))}
         </div>
       )}
+      <div>
+        <GlobalPagination
+          totalItems={filteredProducts?.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 }

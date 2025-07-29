@@ -5,7 +5,7 @@ import MarqueText from "@/components/marque-text";
 
 export default async function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mb-10">
       <MarqueText />
 
       {/* Categories Section */}

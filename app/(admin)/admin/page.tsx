@@ -1,13 +1,42 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, ShoppingCart, Tags, TrendingUp } from "lucide-react";
-import { products, orders, categories } from "@/lib/data";
+import { orders, categories } from "@/lib/data";
+import { useAppSelector } from "@/hooks/useRedux";
+import { useEffect, useState } from "react";
+import { IOrder } from "@/types";
+import { toast } from "sonner";
+import { current } from "@reduxjs/toolkit";
 
 export default function AdminDashboard() {
+  const { products } = useAppSelector((state) => state.product);
+  const { categories } = useAppSelector((state) => state.category);
   const totalProducts = products.length;
   const totalOrders = orders.length;
   const totalCategories = categories.length;
   const totalRevenue = orders.reduce((sum, order) => sum + order.price, 0);
+  const [allOrders, setAllOrders] = useState<IOrder[]>([]);
+
+  const revinews =
+    allOrders
+      ?.filter((order) => order?.status === "delivered")
+      ?.reduce((total, cur) => (total += cur?.price), 0) || 0;
+  console.log({ revinews });
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(`/api/orders`);
+      const data = await res.json();
+      setAllOrders(data.data as IOrder[]);
+    } catch (error) {
+      toast.error("Failed to fetch orders");
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   const stats = [
     {
@@ -18,7 +47,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Total Orders",
-      value: totalOrders,
+      value: allOrders?.length,
       icon: ShoppingCart,
       color: "text-green-600",
     },
@@ -30,7 +59,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Revenue",
-      value: `৳${totalRevenue.toLocaleString()}`,
+      value: `৳${revinews?.toFixed(2)}`,
       icon: TrendingUp,
       color: "text-orange-600",
     },
@@ -97,16 +126,20 @@ export default function AdminDashboard() {
             <div className="space-y-4">
               {products.slice(0, 5).map((product) => (
                 <div
-                  key={product.id}
+                  key={product?._id}
                   className="flex justify-between items-center"
                 >
                   <div>
-                    <p className="font-medium">{product.name}</p>
-                    <p className="text-sm text-gray-500">{product.category}</p>
+                    <p className="font-medium">{product?.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {
+                        categories?.find(
+                          (cat) => cat?._id === product?.category
+                        )?.name
+                      }
+                    </p>
                   </div>
-                  <p className="font-medium">
-                    ৳{product.price.toLocaleString()}
-                  </p>
+                  <p className="font-medium">৳{product.price.toFixed(2)}</p>
                 </div>
               ))}
             </div>

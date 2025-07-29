@@ -107,7 +107,7 @@ const OrderForm = ({ product }: Props) => {
           id="phone"
           type="tel"
           {...register("phone")}
-          placeholder="01712345678"
+          placeholder=""
           className={errors.phone ? "border-red-500" : ""}
         />
         {errors.phone && (

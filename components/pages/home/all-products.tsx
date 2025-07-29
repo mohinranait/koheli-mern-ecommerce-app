@@ -17,8 +17,8 @@ const AllProducts = () => {
 
   return (
     <div className="container mx-auto py-5 px-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-bold">Best selling products</h2>
+      <div className="flex justify-between items-center mb-2 lg:mb-4">
+        <h2 className="text-xl lg:text-2xl font-bold">Best selling products</h2>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
         {displayedProducts.map((product) => (

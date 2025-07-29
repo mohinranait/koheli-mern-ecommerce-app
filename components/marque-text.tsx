@@ -10,7 +10,16 @@ const MarqueText = () => {
     <>
       {site?.marqueStatus ? (
         <div className="h-8 text-white flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600">
-          <Marquee>{site?.marque}</Marquee>
+          <Marquee
+            speed={40}
+            gradient={false}
+            pauseOnHover={true}
+            pauseOnClick={true}
+          >
+            <span className="mr-32  md:mr-12 lg:mr-16 xl:mr-20">
+              {site?.marque}
+            </span>
+          </Marquee>
         </div>
       ) : (
         ""
