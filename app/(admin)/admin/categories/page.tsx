@@ -536,12 +536,25 @@ export default function CategoriesPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Badge variant="secondary" className="mb-2">
-                  {category.slug}
-                </Badge>
-                <p className="text-sm text-gray-600">
-                  Created: {new Date(category.createdAt).toLocaleDateString()}
-                </p>
+                <div className="text-xs">
+                  Slug:
+                  <Badge variant="secondary" className="mb-2">
+                    {category.slug}
+                  </Badge>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-sm text-gray-600">
+                    Created: {new Date(category.createdAt).toLocaleDateString()}
+                  </p>
+                  <Badge
+                    className="capitalize"
+                    variant={
+                      category.status === "active" ? "default" : "secondary"
+                    }
+                  >
+                    {category.status}
+                  </Badge>
+                </div>
               </CardContent>
             </Card>
           ))}

@@ -2,32 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import {
-  ChevronDown,
-  BookOpen,
-  Users,
-  TrendingUp,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/hooks/useRedux";
 import { ICategory } from "@/types";
-import Image from "next/image";
-
-interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-  icon?: string;
-  description?: string;
-  parent: string | null;
-  level: number;
-  courseCount: number;
-  children: Category[];
-}
 
 interface CategoriesNavbarProps {
   className?: string;

@@ -16,6 +16,7 @@ import Logo from "./logo";
 import { CategoriesNavbar } from "./CategoriesNavbar";
 
 export function Header() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -94,7 +95,7 @@ export function Header() {
             </Link>
 
             {/* Mobile Menu */}
-            <Sheet>
+            <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="sm">
                   <Menu className="h-4 w-4" />
@@ -132,6 +133,7 @@ export function Header() {
                 <div className="border-t px-3 py-4 pb-10 ">
                   <Link
                     href="/login"
+                    onClick={() => setIsDrawerOpen(false)}
                     className="flex items-center pb-3 text-lg font-medium text-gray-900 hover:text-blue-600"
                   >
                     <User className="h-5 w-5 mr-3" />
