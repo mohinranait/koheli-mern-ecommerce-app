@@ -1,7 +1,13 @@
 "use client";
 
 import type React from "react";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,6 +54,7 @@ const categorySchema = z.object({
     .max(100, "Category name must be less than 100 characters"),
   slug: z.string().optional(),
   image: z.string().optional(),
+  status: z.enum(["active", "inactive"]),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -73,6 +80,7 @@ export default function CategoriesPage() {
       name: "",
       slug: "",
       image: "",
+      status: "active",
     },
   });
 
@@ -188,6 +196,7 @@ export default function CategoriesPage() {
       name: category.name,
       slug: category.slug,
       image: category.image,
+      status: category.status,
     });
     setIsDialogOpen(true);
     if (category.image) {
@@ -273,6 +282,7 @@ export default function CategoriesPage() {
       name: "",
       slug: "",
       image: "",
+      status: "active",
     });
     setError("");
     setImagePreview("");
@@ -433,6 +443,31 @@ export default function CategoriesPage() {
                           )}
                         </div>
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}

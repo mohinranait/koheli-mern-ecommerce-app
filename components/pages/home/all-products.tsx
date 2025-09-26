@@ -12,11 +12,15 @@ const AllProducts = () => {
     setVisibleCount((prev) => prev + 8);
   };
 
-  const displayedProducts = products.slice(0, visibleCount);
-  const hasMoreProducts = visibleCount < products.length;
+  const activeProducts = products?.filter(
+    (product) => product.status === "active"
+  );
+
+  const displayedProducts = activeProducts.slice(0, visibleCount);
+  const hasMoreProducts = visibleCount < activeProducts.length;
 
   return (
-    <div className="container mx-auto py-5 px-4">
+    <div className="container mx-auto py-5 pb-32 px-4">
       <div className="flex justify-between items-center mb-2 lg:mb-4">
         <h2 className="text-xl lg:text-2xl font-bold">Best selling products</h2>
       </div>

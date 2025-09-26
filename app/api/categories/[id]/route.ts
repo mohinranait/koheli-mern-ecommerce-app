@@ -7,7 +7,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     await dbConnect()
 
     const body = await request.json()
-    const { name, slug, image } = body
+    const { name, slug, image,status } = body
 
     // Check if slug already exists (excluding current category)
     const existingCategory = await Category.findOne({
@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const category = await Category.findByIdAndUpdate(
       params.id,
-      { name, slug: slug.toLowerCase(), image },
+      { name, slug: slug.toLowerCase(), image, status },
       { new: true, runValidators: true },
     )
 

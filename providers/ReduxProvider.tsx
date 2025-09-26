@@ -1,5 +1,5 @@
 "use client";
-import { useAppDispatch } from "@/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { SiteSettings } from "@/lib/site-settings";
 import { setCategories } from "@/redux/features/categorySlice";
 import { setProducts } from "@/redux/features/productSlice";

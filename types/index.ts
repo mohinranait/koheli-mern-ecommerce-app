@@ -38,7 +38,7 @@ export interface ICategory {
   name: string
   slug: string
   image: string
-  status: string
+  status:  "active" | "inactive"
   createdAt: string
 }
 

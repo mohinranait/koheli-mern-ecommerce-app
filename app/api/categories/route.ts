@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     await dbConnect()
 
     const body = await request.json()
-    const { name, slug, image } = body
+    const { name, slug, image,status } = body
 
     // Check if slug already exists
     const existingCategory = await Category.findOne({ slug })
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
       name,
       slug: slug.toLowerCase(),
       image,
+      status
     })
 
     return NextResponse.json({ success: true, data: category }, { status: 201 })

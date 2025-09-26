@@ -11,8 +11,11 @@ export default function CategoryComponent({ slug }: CategoryProps) {
   const { products } = useAppSelector((state) => state.product);
 
   const category = categories.find((c) => c?.slug === slug);
+  const activeProducts = products?.filter(
+    (product) => product.status === "active"
+  );
 
-  const categoryProducts = products.filter(
+  const categoryProducts = activeProducts.filter(
     (p) => p?.category === category?._id
   );
 
