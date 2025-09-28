@@ -108,12 +108,14 @@ export function Header() {
                 <div className=" flex flex-col space-y-3 overflow-auto max-h-[calc(100vh-110px)]">
                   <Link
                     href="/"
+                    onClick={() => setIsDrawerOpen(false)}
                     className="text-lg font-medium px-3 text-gray-900 hover:text-blue-600"
                   >
                     Home
                   </Link>
                   {getCategories(activeCategories)?.map((cat) => (
                     <Link
+                      onClick={() => setIsDrawerOpen(false)}
                       key={cat?._id}
                       href={`/category/${cat?.slug}`}
                       className="text-lg font-medium flex items-center gap-2 px-3 text-gray-900 hover:text-blue-600"
